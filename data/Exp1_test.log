@@ -1,0 +1,30 @@
+5.2580 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output', u'HDMI']
+5.6502 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+11.5433 	EXP 	Set  sound=C
+5.8667 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+6.5090 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+14.0847 	EXP 	Set  sound=C
+5.1797 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.6641 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+10.7170 	EXP 	Set  sound=C
+5.0607 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.4681 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+10.6485 	EXP 	Set  sound=C
+5.0839 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.5032 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+10.6912 	EXP 	Set  sound=C
+5.2313 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.6759 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+12.7677 	EXP 	Set  sound=C
+5.2756 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.6901 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+11.1727 	EXP 	Set  sound=C
+5.1570 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.6525 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+10.8612 	EXP 	Set  sound=C
+5.2104 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.6969 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+11.2764 	EXP 	Set  sound=C
+5.2456 	ERROR 	Requested audio device 'auto' that is not available on this hardware. The 'audioDevice' preference should be one of [u'Built-in Output']
+5.6990 	WARNING 	psychopy.parallel has been imported on a Mac (which doesn't have a parallel port?)
+11.2596 	EXP 	Set  sound=C
