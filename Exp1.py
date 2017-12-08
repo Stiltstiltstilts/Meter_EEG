@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 
 #from __future__ import division
-from psychopy import core, visual, sound, logging, gui, event, parallel
+from psychopy import core, visual, logging, gui, event, parallel, prefs
+import sounddevice as sd
+import soundfile as sf
+prefs.general['audioLib'] = ['sounddevice']
 from numpy.random import random, randint, normal, shuffle
+from psychopy import sound
 import os, sys, itertools  
 from constants import *
 
-
 GlobalClock = core.Clock() # Track time since experiment starts
 
-#port = parallel.ParallelPort(address=0xd050)
-#port.setData(0)
-
-#port.setData(respCode)
-#core.wait(0.02)
+#port = parallel.ParallelPort(address=0xd050) ################################
 #port.setData(0)
 
 # Ensures that relative paths start from the same directory as this script
@@ -43,8 +42,8 @@ logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a f
 # ===== VARIABLES ====== #
 # ====================== #
 ####====Auditory Stimuli====####
-beat_stim = sound.Sound(u'beat_stim.wav') # removed secs=-1
-beat_stim.setVolume(1) #Beat stimulus
+beat_stim, samplerate = sf.read(u'beat_stim.wav')
+sd.default.samplerate = samplerate
 
 win = visual.Window(fullscr=False,
                 monitor='Laptop',
@@ -216,15 +215,13 @@ elif expInfo['order'] == 12:
 
 try: 
     #Set up variables
-    message1 = visual.TextStim(win, pos=[0,+3], color='#000000', alignHoriz='center', name='topMsg', text="placeholder") 
-    message2 = visual.TextStim(win, pos=[0,-3], color='#000000', alignHoriz='center', name='bottomMsg', text="placeholder") 
+    message1 = visual.TextStim(win, pos=[0,+3], color=FGC, alignHoriz='center', name='topMsg', text="placeholder") 
+    message2 = visual.TextStim(win, pos=[0,-3], color=FGC, alignHoriz='center', name='bottomMsg', text="placeholder") 
     ratingCont = visual.RatingScale(win=win, name='ratingCont', marker=u'triangle', size=1.0, pos=[0.0, -0.4], choices=[u'No', u'Yes'], tickHeight=-1) #Rating for interruption control condition
-    ratingCont_question = visual.TextStim(win, pos=[0,+3], color='#000000', alignHoriz='center', text="Was there a salmon or interruption?")
-    fixation = visual.TextStim(win,  pos=[0,0], color='#000000', alignHoriz='center', text="+")
-    circle = visual.TextStim(win,  pos=[0,0], color='#000000', alignHoriz='center', text="+")
-    endMessage = visual.TextStim(win,  pos=[0,0], color='#000000', alignHoriz='center', text="The end!")
-    ratingImag = visual.RatingScale(win=win, name='ratingCol', marker=u'triangle', size=1.0, pos=[0.0, -0.4], low=1, high=7, labels=[u'no image at all', u'fairly vivid', u'vivid as actual'], scale=u'') #Mental imagery rating
-    ratingImag_question = visual.TextStim(win, pos=[0,+3], color='#000000', alignHoriz='center', text="How vivid was your mental imagery?")
+    ratingCont_question = visual.TextStim(win, pos=[0,+3], color=FGC, alignHoriz='center', text="Was there a salmon or interruption?")
+    fixation = visual.TextStim(win,  pos=[0,0], color=FGC, alignHoriz='center', text="+")
+    circle = visual.TextStim(win,  pos=[0,0], color=FGC, alignHoriz='center', text="+")
+    endMessage = visual.TextStim(win,  pos=[0,0], color=FGC, alignHoriz='center', text="The end!")
     wordStim = visual.TextStim(win=win, pos=[0,0], color=FGC, text="placeholder")
     spaceCont = visual.TextStim(win=win, pos=[0,0], color=FGC, text="Press space to continue")
     clock = core.Clock()
@@ -237,9 +234,9 @@ try:
     counter = 0
     while counter < len(topControl):
         if topControl[counter] == "sound":
-            beat_stim.play()
+            sd.play(beat_stim)
             core.wait(5)
-            beat_stim.stop()
+            sd.stop()
         else:
             message1.setText(topControl[counter])
             if counter == 0:
@@ -267,7 +264,7 @@ try:
         fixation.draw()
         win.flip() 
         core.wait(2) # Wait 2 seconds
-        trial['sound'].play()
+        sd.play(trial['sound'])
         #port.setData(trial['ref']) #Stim starts
         #core.wait(0.002)
         #port.setData(0)
@@ -278,7 +275,7 @@ try:
             wordStim.draw()
             win.flip() #lock clock timing to win.flip for frame 0
             while clock.getTime() < (beatFreq * x) - (frameInterval * 0.9): pass # until just before next frame of next beat
-        trial['sound'].stop()
+        sd.stop()
         win.flip() #clear
         while ratingCont.noResponse:
             ratingCont.draw()
@@ -322,7 +319,7 @@ try:
                 fixation.draw()
                 win.flip() 
                 core.wait(2) # Wait 2 seconds
-                trials['sound'].play()
+                sd.play(trials['sound'])
                 #port.setData(trial['ref']) #Stim starts
                 #core.wait(0.002)
                 #port.setData(0)
@@ -333,7 +330,7 @@ try:
                     wordStim.draw()
                     win.flip() #lock clock timing to win.flip for frame 0
                     while clock.getTime() < (beatFreq * x) - (frameInterval * 0.9): pass # until just before next frame of next beat
-                trials['sound'].stop()
+                sd.stop()
                 win.flip() #clear
                 core.wait(2)
                 #check for a keypress
