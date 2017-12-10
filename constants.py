@@ -3,14 +3,14 @@
 
 import csv
 
-FGC = (1, 1, 1) #white
+FGC = (-1, -1, -1) #black
 BGC = (0, 0, 0) #grey
 TEXTSIZE = 42 #text size for stim (not instructions)
 TEXTCORDS = (0, 0) #Centre of screen
 TRIALREPEATS = 1 # each trial last for approx 35seeconds 
 beatFreq = 0.417 #2.4Hz
 frameInterval = 0.0166667 #framerate.... CHECK THIS
-soundDelay = 0.02 #CHECK THIS
+soundDelay = .105 # 0.003 for processing command + .102 for soundcard/driver processing and sound coming out of earphones
 
 #Instruction durations
 condition_duration = 3 #duration for condition instructions prior to each trial

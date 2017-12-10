@@ -2,18 +2,19 @@
 # -*- coding: utf-8 -*-
 
 #from __future__ import division
-from psychopy import core, visual, logging, gui, event, parallel, prefs, data
+
+from psychopy import core, visual, logging, gui, event, parallel, prefs
 import sounddevice as sd
 import soundfile as sf
 prefs.general['audioLib'] = ['sounddevice']
-from numpy.random import random, randint, normal, shuffle
 from psychopy import sound
+from numpy.random import random, randint, normal, shuffle
 import os, sys, itertools  
 from constants import *
 
 GlobalClock = core.Clock() # Track time since experiment starts
 
-#port = parallel.ParallelPort(address=0xd050) ################################
+#port = parallel.ParallelPort(address=0xd050)
 #port.setData(0)
 
 # Ensures that relative paths start from the same directory as this script
@@ -26,7 +27,7 @@ expInfo = {u'session': u'001', u'participant': u'', u'order':1}
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False:
     core.quit()  # user pressed cancel
-expInfo['date'] = data.getDateStr()  # add a simple timestamp
+#expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 
 # Data file name stem = absolute path + name
@@ -42,7 +43,10 @@ logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a f
 # ===== VARIABLES ====== #
 # ====================== #
 ####====Auditory Stimuli====####
-beat_stim, sd.default.samplerate = sf.read(u'pure_tone3.wav')
+beat_stim, samplerate = sf.read(u'beat_stim.wav')
+sd.default.samplerate = samplerate
+#beat_stim = sound.Sound(u'beat_stim.wav') 
+#beat_stim.setVolume(1) #Beat stimulus
 
 win = visual.Window(fullscr=False,
                 monitor='Laptop',
@@ -83,65 +87,53 @@ gesture_ternary = visual.ImageStim(
 
 bottomInst = ["Press space to continue.",
     "Press space to continue or backspace to go back.",
-    "When you're ready to begin, press space."]
+    "WHEN YOU'RE READY TO BEGIN, press space."]
 
 topControl = ["Welcome to our study--thank you for participating!",
     "Today, you will be listening to a repetitive beat quite a bit.",
     "Think of it as a weird and wonderful form of meditation--for science!",
-    "In this first section, you will listen to this beat while seeing words flash on the screen",
+    "In this first section, you will listen to this beat while seeing words appear on the screen",
     "While this happens, you will have two tasks: a word task and a beat task.",
     "The word task is to identify if one of the words is a type of fish, like 'salmon'.",
     "The words appear only briefly, so you'll have to pay attention.",
     "The beat task is to identify whether the beat suddenly glitches/speeds up, press space to hear what this sounds like",
     "sound", #this triggers a sound file to be played as an example
     "At the end of each trial, the computer will ask whether there was a 'salmon' or a 'glitched beat'.",
-    "As soon as you respond, the next trial will start automatically. So don't confirm your answer until you are ready to continue. Feel free to take short breaks.",
+    "As soon as you respond, the next trial will start automatically.",
     "Before each trial starts, a black cross appears at the centre of the screen.",
     "It is important that you keep your eyes fixated on this cross during the trial and to not move your eyes around.",
     "You can stretch and move your eyes in between trials, but not during them.",
     "During each trial, try and keep your body as still and relaxed as possible.",
-    "So don't tap your foot, move your face, tongue, or even wiggle your toes in time with the beat.",
-    "Also, do not actually pronounce the words you see with your mouth. Regular movements of the mouth/tongue can interfer with our recording of your brainwaves.",
-    "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
-    ""]
+    "So don't tap your foot, move your face, tongue, or even wiggle your toes in time with the beat",
+    "If you have any questions or if anything wasn't clear, let the experimenter know now."]
 
-topImagery = ["In this section of the experiment, your task is to imagine specfic metrical interpretations of the beat.",
-    "While the beat we play you will always be the same, your task is to imagine it grouped in 2s (binary) or 3s (ternary).",
-    "In music theory, this is know as meter. Binary is like 2/4 time, as in march music, and ternary is like 3/4 time, as in waltz music.",
-    "image1", # this triggers an image file to help explain meter imagery
-    "Before each trial, the computer will tell you to whether to imagine a 'binary' or a 'ternary' meter. And the numbers '1 2' (binary) and '1 2 3' (ternary) will flash on the screen to guide you.",
-    "Like before, however, be sure not to actually pronounce these numbers with your mouth, as these facial movmements can interfere with our recording.",
-    "Press spacebar to play a short excerpt of the experiment beat sound. Practise imagining binary or ternary meter to check you understand the task.",
-    "sound",
-    "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
-    ""]
+topImagery = ["In this section of the experiment, your task is to imagine a specfic metrical interpretation of the beat.",
+    "For example, ",
+    "Specifically, you are to imagine the colours RED then BLUE in either groups of 2 or 3, changing colours in time with the beeps.",
+    "For a group of two RED BLUE RED BLUE RED BLUE etc.",
+    "And for a group of three RED BLUE BLUE RED BLUE BLUE etc.",
+    "You will be told which of these patterns to imagine before the sound starts.",
+    "Start this imagery from the first beep and maintain it all the way through as vividly as you can.",
+    "You will also be asked to close your eyes during the sound. Open them again once the sound stops.",
+    "Let the experimenter know if you have questions before continuing."]
 
-topWords = ["In this section of the experiment, words will flash on the screen in time with the beat.",
-    "Your task is to silently read these words as they appear, like you would silently read a book.",
-    "However, it is important that you DO NOT move your mouth and tongue while you read these words, as this can interfere with the recording of your brainwaves.",
-    "So, keep your body and mouth relaxed during the task.",
-    "Besides reading these words as they appear, your other task is to identify whether the trial you just listened to contained the phrase 'old swans'.",
-    "During a trial, if you see this phrase, make a note of it while continuing to read the words. Then indicate 'yes I saw the phrase' at the end of the trial.",
-    "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
-    ""]
+topWords = ["Part 2",
+    "This time, you will hear the same beat but there will be no interruptions.",
+    "Your task is to use visual mental imagery to help you feel the beat in either 2 or 3 beat patterns",
+    "Specifically, you are to imagine the colours RED then BLUE in either groups of 2 or 3, changing colours in time with the beeps.",
+    "For a group of two RED BLUE RED BLUE RED BLUE etc.",
+    "And for a group of three RED BLUE BLUE RED BLUE BLUE etc.",
+    "You will be told which of these patterns to imagine before the sound starts.",
+    "Start this imagery from the first beep and maintain it all the way through as vividly as you can.",
+    "You will also be asked to close your eyes during the sound. Open them again once the sound stops.",
+    "Let the experimenter know if you have questions before continuing."]
 
-topGesture = ["In this section of the experiment, you will listen to the beat while imagining movement gestures (similar to conducting).",
-    "Each beat you hear is to be imagined as a movement in space."
-    "To make this more concrete, imagine you are chopping some wood with an axe. To swing the axe, you have the pull the axe back behind your head (UP) and then swing it at the wood (DOWN).",
-    "This sequence of movements, UP (axe back) leading to DOWN (axe down), is what you need to imagine as vividly as you can, in time with the beats."
-    "If it helps, actually imagine yourself chopping wood and try and feel the detailed sensations like the weight of the axe rushing down onto the wood, and the muscular effort required to swing.",
-    "It is also important that the UP movement is not just the feeling of going upward, but it is the preparation that leads to the DOWN (you can't swing an axe if you don't first go 'UP')",
-    "In this sense, you are always aiming for 'DOWN' and in order to get there, you have to go 'UP' first.",
-    "In this section, you will have to imagine either binary or ternary versions of this movement gesture.",
-    "The binary version is the one just described: an alternation of UP -> DOWN, UP -> DOWN, UP -> DOWN etc.",
-    "The ternary version is slightly different: an alternation of UP -> UP -> DOWN, UP -> UP -> DOWN, UP -> UP -> DOWN etc.",
-    "Going back to the wood-chopping analogy, the extra 'UP' in the ternary version is like you not getting the axe high enough on the first 'UP', so you have to make two 'UP' movements before finally swinging 'DOWN'.",
-    "Press spacebar to hear the beat, and practice imagining these movements in time to the beat. Repeat sound as many times as you want by simply pressing backspace once the sound stops.",
-    "sound",
-    "You will be told to imagine either 'binary' (UP -> DOWN) or 'ternary' (UP -> UP -> DOWN) at the start of each trial. And the words 'UP' and 'DOWN' will appear in time with the beat to guide you.",
-    "As before, while you are imagining movements, it is important that you keep your body still and relaxed during the trial. As movements can interfere with brainwave recording.",
-    "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
-    ""]
+topGesture = ["Part 3",
+    "This time your task is to imagine UP and DOWN gestures in time with the beeps",
+    "Like before, these will come in either groups of 2 or 3 and you will be told which before each test.",
+    "The experimenter will come in and demonstrate what this means.",
+    "Like before, you will also be asked to close your eyes during the sound. And opening them again once the sound stops.",
+    "Let the experimenter know if you have questions before continuing."]
 
 # ==================================== #
 # ===== TRIAL LIST CONSTRUCTION ====== #
@@ -226,17 +218,20 @@ elif expInfo['order'] == 12:
 
 try: 
     #Set up variables
-    message1 = visual.TextStim(win, pos=[0,+3], color=FGC, alignHoriz='center', name='topMsg', text="placeholder") 
-    message2 = visual.TextStim(win, pos=[0,-3], color=FGC, alignHoriz='center', name='bottomMsg', text="placeholder") 
+    message1 = visual.TextStim(win, pos=[0,+3], color='#000000', alignHoriz='center', name='topMsg', text="placeholder") 
+    message2 = visual.TextStim(win, pos=[0,-3], color='#000000', alignHoriz='center', name='bottomMsg', text="placeholder") 
     ratingCont = visual.RatingScale(win=win, name='ratingCont', marker=u'triangle', size=1.0, pos=[0.0, -0.4], choices=[u'No', u'Yes'], tickHeight=-1) #Rating for interruption control condition
-    ratingCont_question = visual.TextStim(win, pos=[0,+3], color=FGC, alignHoriz='center', text="Was there a salmon or interruption?")
-    fixation = visual.TextStim(win,  pos=[0,0], color='white', alignHoriz='center', text="+", opacity=0.5)
-    endMessage = visual.TextStim(win,  pos=[0,0], color=FGC, alignHoriz='center', text="The end!")
+    ratingCont_question = visual.TextStim(win, pos=[0,+3], color='#000000', alignHoriz='center', text="Was there a salmon or interruption?")
+    fixation = visual.TextStim(win,  pos=[0,0], color='#000000', alignHoriz='center', text="+")
+    circle = visual.TextStim(win,  pos=[0,0], color='#000000', alignHoriz='center', text="+")
+    endMessage = visual.TextStim(win,  pos=[0,0], color='#000000', alignHoriz='center', text="The end!")
+    ratingImag = visual.RatingScale(win=win, name='ratingCol', marker=u'triangle', size=1.0, pos=[0.0, -0.4], low=1, high=7, labels=[u'no image at all', u'fairly vivid', u'vivid as actual'], scale=u'') #Mental imagery rating
+    ratingImag_question = visual.TextStim(win, pos=[0,+3], color='#000000', alignHoriz='center', text="How vivid was your mental imagery?")
     wordStim = visual.TextStim(win=win, pos=[0,0], color=FGC, text="placeholder")
     spaceCont = visual.TextStim(win=win, pos=[0,0], color=FGC, text="Press space to continue")
-    meterImage = visual.ImageStim(win=win, image=u'imagery.jpg', pos=[0,+3], mask=None, size=(6,6))
     clock = core.Clock()
 
+   
     # ========================== #
     # ===== CONTROL BLOCK ====== #
     # ========================== #
@@ -271,26 +266,22 @@ try:
 
     # ===== TRIALS ====== #
     for trial in controlTrials:
-        sd.play(trial['sound']) #loading the file into memory to eliminate additional latencies
-        sd.stop()
         fixation.draw()
         win.flip() 
         core.wait(2) # Wait 2 seconds
-        win.flip()  ### start of routine to compensate for sound latency
-        clock.reset()
-        sd.play(trial['sound'])
-        while clock.getTime() < soundDelay - (frameInterval * 0.9): win.flip()  
+        trial['sound'].play()
         #port.setData(trial['ref']) #Stim starts
-        #core.wait(0.001)
+        #core.wait(0.002)
         #port.setData(0)
+        core.wait(soundDelay)
         clock.reset()
         for x in range(1, 80): # 79 beats/words
             wordStim.setText(trial['prompt'][(x-1)])
             wordStim.draw()
-            fixation.draw()
             win.flip() #lock clock timing to win.flip for frame 0
             while clock.getTime() < (beatFreq * x) - (frameInterval * 0.9): pass # until just before next frame of next beat
-        sd.stop()
+        trial['sound'].stop()
+        win.flip() #clear
         while ratingCont.noResponse:
             ratingCont.draw()
             ratingCont_question.draw()
@@ -306,26 +297,16 @@ try:
         # ===== INSTRUCTIONS ====== #
         counter = 0
         while counter < len(blocks['instructions']):
-            if blocks['instructions'][counter] == "sound":
-                sd.play(beat_stim)
+            message1.setText(blocks['instructions'][counter])
+            if counter == 0:
+                message2.setText(bottomInst[0])
+            elif counter in range(1, (len(blocks['instructions']) - 1)):
                 message2.setText(bottomInst[1])
-                message2.draw()
-                win.flip()
-                core.wait(10)
-                sd.stop()
-            elif blocks['instructions'][counter] == "image1":
-                meterImage.draw()
             else: 
-                message1.setText(blocks['instructions'][counter])
-                if counter == 0:
-                    message2.setText(bottomInst[0])
-                elif counter in range(1, (len(blocks['instructions']) - 1)):
-                    message2.setText(bottomInst[1])
-                else: 
-                    message2.setText(bottomInst[2])
-                #display instructions and wait
-                message1.draw()
-                message2.draw() 
+                message2.setText(bottomInst[2])
+            #display instructions and wait
+            message1.draw()
+            message2.draw() 
             win.logOnFlip(level=logging.EXP, msg='Display Instructions%d'%(counter+1))
             win.flip()
             #check for a keypress
@@ -343,7 +324,7 @@ try:
                 fixation.draw()
                 win.flip() 
                 core.wait(2) # Wait 2 seconds
-                sd.play(trials['sound'])
+                trials['sound'].play()
                 #port.setData(trial['ref']) #Stim starts
                 #core.wait(0.002)
                 #port.setData(0)
@@ -354,7 +335,7 @@ try:
                     wordStim.draw()
                     win.flip() #lock clock timing to win.flip for frame 0
                     while clock.getTime() < (beatFreq * x) - (frameInterval * 0.9): pass # until just before next frame of next beat
-                sd.stop()
+                trials['sound'].stop()
                 win.flip() #clear
                 core.wait(2)
                 #check for a keypress
@@ -365,10 +346,7 @@ try:
                     core.quit()
                 else:
                     win.flip()
-    endMessage.draw()
-    win.flip()
-    core.wait(5)
-    
+
 
 finally:
     win.close()
