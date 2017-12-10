@@ -11,18 +11,21 @@ from psychopy import sound
 import os, sys, itertools  
 from constants import *
 
+sd.default.device = 12 # Audigy ASIO driver for 16bit 48000HZ
+sd.default.latency = ('low','low')
+
 GlobalClock = core.Clock() # Track time since experiment starts
 
-#port = parallel.ParallelPort(address=0xd050) ################################
-#port.setData(0)
+port = parallel.ParallelPort(address=0xd050) 
+port.setData(0)
 
 # Ensures that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
 os.chdir(_thisDir)
 
 # Store info about the experiment session (from prompt box)
-expName = 'Exp1'  
-expInfo = {u'session': u'001', u'participant': u'', u'order':1}
+expName = 'Beat_EEG'  
+expInfo = {u'session': u'001', u'participant': u'', u'order':1, u'handedness':u'', u'headcirc':u'',u'gender':u''}
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False:
     core.quit()  # user pressed cancel
@@ -44,8 +47,8 @@ logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a f
 ####====Auditory Stimuli====####
 beat_stim, sd.default.samplerate = sf.read(u'pure_tone3.wav')
 
-win = visual.Window(fullscr=False,
-                monitor='Laptop',
+win = visual.Window(fullscr=True,
+                monitor='asus',
                 units='deg',
                 allowGUI=False)
                 
@@ -86,8 +89,7 @@ bottomInst = ["Press space to continue.",
     "When you're ready to begin, press space."]
 
 topControl = ["Welcome to our study--thank you for participating!",
-    "Today, you will be listening to a repetitive beat quite a bit.",
-    "Think of it as a weird and wonderful form of meditation--for science!",
+    "Today, you will be listening to an auditory beat quite a bit. Think of it as a weird and wonderful form of meditation--for science!",
     "In this first section, you will listen to this beat while seeing words flash on the screen",
     "While this happens, you will have two tasks: a word task and a beat task.",
     "The word task is to identify if one of the words is a type of fish, like 'salmon'.",
@@ -173,22 +175,22 @@ for x in range(TRIALREPEATS):
 
 imagery2Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':4}
+    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':4, 'intro':u'Binary'}
     imagery2Trials.extend([trial])
 
 imagery3Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':5}
+    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':5, 'intro':u'Ternary'}
     imagery3Trials.extend([trial])
 
 gest2Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':6}
+    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':6, 'intro':u'Binary (UP -> DOWN)'}
     gest2Trials.extend([trial])
 
 gest3Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':7}
+    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':7, 'intro':u'Ternary (UP -> UP -> DOWN)'}
     gest3Trials.extend([trial])
 
 allBlocks = []
@@ -230,12 +232,15 @@ try:
     message2 = visual.TextStim(win, pos=[0,-3], color=FGC, alignHoriz='center', name='bottomMsg', text="placeholder") 
     ratingCont = visual.RatingScale(win=win, name='ratingCont', marker=u'triangle', size=1.0, pos=[0.0, -0.4], choices=[u'No', u'Yes'], tickHeight=-1) #Rating for interruption control condition
     ratingCont_question = visual.TextStim(win, pos=[0,+3], color=FGC, alignHoriz='center', text="Was there a salmon or interruption?")
-    fixation = visual.TextStim(win,  pos=[0,0], color='white', alignHoriz='center', text="+", opacity=0.5)
+    fixation = visual.TextStim(win,  pos=[0,0], color=FGC, alignHoriz='center', text="+")
     endMessage = visual.TextStim(win,  pos=[0,0], color=FGC, alignHoriz='center', text="The end!")
     wordStim = visual.TextStim(win=win, pos=[0,0], color=FGC, text="placeholder")
     spaceCont = visual.TextStim(win=win, pos=[0,0], color=FGC, text="Press space to continue")
+    introText = visual.TextStim(win=win, pos=[0,0], color=FGC, text="Placeholder")
     meterImage = visual.ImageStim(win=win, image=u'imagery.jpg', pos=[0,+3], mask=None, size=(6,6))
     clock = core.Clock()
+
+
 
     # ========================== #
     # ===== CONTROL BLOCK ====== #
@@ -271,23 +276,22 @@ try:
 
     # ===== TRIALS ====== #
     for trial in controlTrials:
-        sd.play(trial['sound']) #loading the file into memory to eliminate additional latencies
+        sd.play(trial['sound']) #loading the file into memory to eliminate possible buffering latencies
         sd.stop()
         fixation.draw()
         win.flip() 
         core.wait(2) # Wait 2 seconds
-        win.flip()  ### start of routine to compensate for sound latency
+        port.setData(trial['ref']) #~102ms before stim starts
+        core.wait(0.002)
+        port.setData(0)
+        win.flip() # start of routine to compensate for sound latency
         clock.reset()
         sd.play(trial['sound'])
         while clock.getTime() < soundDelay - (frameInterval * 0.9): win.flip()  
-        #port.setData(trial['ref']) #Stim starts
-        #core.wait(0.001)
-        #port.setData(0)
         clock.reset()
         for x in range(1, 80): # 79 beats/words
             wordStim.setText(trial['prompt'][(x-1)])
             wordStim.draw()
-            fixation.draw()
             win.flip() #lock clock timing to win.flip for frame 0
             while clock.getTime() < (beatFreq * x) - (frameInterval * 0.9): pass # until just before next frame of next beat
         sd.stop()
@@ -297,7 +301,8 @@ try:
             win.flip()
         InterDetec = ratingCont.getRating()
         ratingCont.reset()
-        core.wait(1)
+        core.wait(0.5) 
+
 
     # ============================ #
     # ===== MAIN EXPERIMENT ====== #
@@ -340,14 +345,23 @@ try:
         # ===== TRIALS ====== #
         for conditions in blocks['trials']:
             for trials in conditions:
+                sd.play(trial['sound']) #loading the file into memory to eliminate possible buffering latencies
+                sd.stop()
+                if 'intro' in trials:
+                    introText.setText(trials['intro'])
+                    introText.draw()
+                    win.flip()
+                    core.wait(1)
                 fixation.draw()
                 win.flip() 
                 core.wait(2) # Wait 2 seconds
+                port.setData(trials['ref']) # ~105ms before stim starts
+                core.wait(0.002)
+                port.setData(0)
+                win.flip() # start of routine to compensate for audio latency
+                clock.reset()
                 sd.play(trials['sound'])
-                #port.setData(trial['ref']) #Stim starts
-                #core.wait(0.002)
-                #port.setData(0)
-                core.wait(soundDelay)
+                while clock.getTime() < soundDelay - (frameInterval * 0.9): win.flip()
                 clock.reset()
                 for x in range(1, 80): # 79 beats/words
                     wordStim.setText(trials['prompt'][(x - 1)])
@@ -356,7 +370,6 @@ try:
                     while clock.getTime() < (beatFreq * x) - (frameInterval * 0.9): pass # until just before next frame of next beat
                 sd.stop()
                 win.flip() #clear
-                core.wait(2)
                 #check for a keypress
                 spaceCont.draw()
                 win.flip()
