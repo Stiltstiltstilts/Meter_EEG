@@ -11,13 +11,13 @@ from psychopy import sound
 import os, sys, itertools  
 from constants import *
 
-sd.default.device = 12 # Audigy ASIO driver for 16bit 48000HZ
-sd.default.latency = ('low','low')
+#sd.default.device = 12 # Audigy ASIO driver for 16bit 48000HZ
+#sd.default.latency = ('low','low')
 
 GlobalClock = core.Clock() # Track time since experiment starts
 
-port = parallel.ParallelPort(address=0xd050) 
-port.setData(0)
+#port = parallel.ParallelPort(address=0xd050) 
+#port.setData(0)
 
 # Ensures that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__)).decode(sys.getfilesystemencoding())
@@ -46,9 +46,10 @@ logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a f
 # ====================== #
 ####====Auditory Stimuli====####
 beat_stim, sd.default.samplerate = sf.read(u'pure_tone3.wav')
+beat_inter, sd.default.samplerate = sf.read(u'tone_interruption.wav')
 
 win = visual.Window(fullscr=True,
-                monitor='asus',
+                monitor='Laptop',
                 units='deg',
                 allowGUI=False)
                 
@@ -86,24 +87,24 @@ gesture_ternary = visual.ImageStim(
 
 bottomInst = ["Press space to continue.",
     "Press space to continue or backspace to go back.",
-    "When you're ready to begin, press space."]
+    "When you're ready to begin, press space. Or press backspace to go back."]
 
 topControl = ["Welcome to our study--thank you for participating!",
     "Today, you will be listening to an auditory beat quite a bit. Think of it as a weird and wonderful form of meditation--for science!",
-    "In this first section, you will listen to this beat while seeing words flash on the screen",
+    "In this first section, you will listen to this beat while seeing words flash on the screen.",
     "While this happens, you will have two tasks: a word task and a beat task.",
     "The word task is to identify if one of the words is a type of fish, like 'salmon'.",
     "The words appear only briefly, so you'll have to pay attention.",
-    "The beat task is to identify whether the beat suddenly glitches/speeds up, press space to hear what this sounds like",
+    "The beat task is to identify whether the beat suddenly glitches/speeds up, press space to hear an example of what this sounds like.",
     "sound", #this triggers a sound file to be played as an example
-    "At the end of each trial, the computer will ask whether there was a 'salmon' or a 'glitched beat'.",
+    "At the end of each trial, the computer will ask whether there was a 'fish-word' or a 'glitched beat'.",
     "As soon as you respond, the next trial will start automatically. So don't confirm your answer until you are ready to continue. Feel free to take short breaks.",
     "Before each trial starts, a black cross appears at the centre of the screen.",
     "It is important that you keep your eyes fixated on this cross during the trial and to not move your eyes around.",
-    "You can stretch and move your eyes in between trials, but not during them.",
+    "You can stretch and move your eyes in between trials, but not during them. Excessive eye movement can interfere with our recording of your brainwaves.",
     "During each trial, try and keep your body as still and relaxed as possible.",
     "So don't tap your foot, move your face, tongue, or even wiggle your toes in time with the beat.",
-    "Also, do not actually pronounce the words you see with your mouth. Regular movements of the mouth/tongue can interfer with our recording of your brainwaves.",
+    "Also, do not actually pronounce the words you see with your mouth. Regular movements of the mouth/tongue can also interfer with our recording of your brainwaves.",
     "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
     ""]
 
@@ -111,8 +112,10 @@ topImagery = ["In this section of the experiment, your task is to imagine specfi
     "While the beat we play you will always be the same, your task is to imagine it grouped in 2s (binary) or 3s (ternary).",
     "In music theory, this is know as meter. Binary is like 2/4 time, as in march music, and ternary is like 3/4 time, as in waltz music.",
     "image1", # this triggers an image file to help explain meter imagery
-    "Before each trial, the computer will tell you to whether to imagine a 'binary' or a 'ternary' meter. And the numbers '1 2' (binary) and '1 2 3' (ternary) will flash on the screen to guide you.",
-    "Like before, however, be sure not to actually pronounce these numbers with your mouth, as these facial movmements can interfere with our recording.",
+    "Before each trial, the computer will tell you to whether to imagine a 'binary' or a 'ternary' meter.",
+    "Imagine the meter in a way that feels natural to you: how do you normally 'feel' the meter when you play or listen to music?",
+    "The numbers '1 2' (binary) and '1 2 3' (ternary) will flash on the screen to guide you during the trial, where the '1' is the strong beat.",
+    "Like before, however, be sure not to actually pronounce these numbers with your mouth, as these facial movements can interfere with our recording.",
     "Press spacebar to play a short excerpt of the experiment beat sound. Practise imagining binary or ternary meter to check you understand the task.",
     "sound",
     "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
@@ -123,7 +126,7 @@ topWords = ["In this section of the experiment, words will flash on the screen i
     "However, it is important that you DO NOT move your mouth and tongue while you read these words, as this can interfere with the recording of your brainwaves.",
     "So, keep your body and mouth relaxed during the task.",
     "Besides reading these words as they appear, your other task is to identify whether the trial you just listened to contained the phrase 'old swans'.",
-    "During a trial, if you see this phrase, make a note of it while continuing to read the words. Then indicate 'yes I saw the phrase' at the end of the trial.",
+    "During a trial, if you see this phrase, make a mental note of it while continuing to read the subsequent words. Then indicate 'yes I saw the phrase' at the end of the trial.",
     "If anything is unclear, let the experimenter know and they can clarify. It is important that you feel comfortable in your understanding of the task.",
     ""]
 
@@ -133,12 +136,12 @@ topGesture = ["In this section of the experiment, you will listen to the beat wh
     "This sequence of movements, UP (axe back) leading to DOWN (axe down), is what you need to imagine as vividly as you can, in time with the beats."
     "If it helps, actually imagine yourself chopping wood and try and feel the detailed sensations like the weight of the axe rushing down onto the wood, and the muscular effort required to swing.",
     "It is also important that the UP movement is not just the feeling of going upward, but it is the preparation that leads to the DOWN (you can't swing an axe if you don't first go 'UP')",
-    "In this sense, you are always aiming for 'DOWN' and in order to get there, you have to go 'UP' first.",
+    "In this sense, you are always aiming for 'DOWN', and in order to get there you have to first go 'UP'.",
     "In this section, you will have to imagine either binary or ternary versions of this movement gesture.",
     "The binary version is the one just described: an alternation of UP -> DOWN, UP -> DOWN, UP -> DOWN etc.",
     "The ternary version is slightly different: an alternation of UP -> UP -> DOWN, UP -> UP -> DOWN, UP -> UP -> DOWN etc.",
     "Going back to the wood-chopping analogy, the extra 'UP' in the ternary version is like you not getting the axe high enough on the first 'UP', so you have to make two 'UP' movements before finally swinging 'DOWN'.",
-    "Press spacebar to hear the beat, and practice imagining these movements in time to the beat. Repeat sound as many times as you want by simply pressing backspace once the sound stops.",
+    "Press spacebar to hear the beat, and practice imagining these movements in time to the beat. Repeat sound as many times as you want by simply pressing backspace and space again once the sound stops.",
     "sound",
     "You will be told to imagine either 'binary' (UP -> DOWN) or 'ternary' (UP -> UP -> DOWN) at the start of each trial. And the words 'UP' and 'DOWN' will appear in time with the beat to guide you.",
     "As before, while you are imagining movements, it is important that you keep your body still and relaxed during the trial. As movements can interfere with brainwave recording.",
@@ -157,12 +160,21 @@ for x in range(TRIALREPEATS):
     trial = {'prompt':c, 'sound':beat_stim, 'ref':1} # 'ref' is for the EEG triggers
     controlTrials.extend([trial])
  # add catch trial
+catch = ControlWords[:]
+catch2 = list(itertools.chain(*catch))
+catch2 = catch2[:77]
+catch2.extend(['tuna'])
+shuffle(catch2)
+temp = {'prompt':catch2, 'sound':beat_stim, 'ref':2}
+controlTrials.extend([temp])
+shuffle(controlTrials)
+print controlTrials
 word2Trials = []
 for x in range(TRIALREPEATS):
     b = BinaryWords[:]
     shuffle(b)
     c = list(itertools.chain(*b))
-    trial = {'prompt':c, 'sound':beat_stim, 'ref':2}
+    trial = {'prompt':c, 'sound':beat_stim, 'ref':3}
     word2Trials.extend([trial])
 
 word3Trials = []
@@ -170,27 +182,27 @@ for x in range(TRIALREPEATS):
     b = TernaryWords[:]
     shuffle(b)
     c = list(itertools.chain(*b))
-    trial = {'prompt':c, 'sound':beat_stim, 'ref':3}
+    trial = {'prompt':c, 'sound':beat_stim, 'ref':4}
     word3Trials.extend([trial])
 
 imagery2Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':4, 'intro':u'Binary'}
+    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':5, 'intro':u'Binary'}
     imagery2Trials.extend([trial])
 
 imagery3Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':5, 'intro':u'Ternary'}
+    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':6, 'intro':u'Ternary'}
     imagery3Trials.extend([trial])
 
 gest2Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(BinGestPrompt * 40), 'sound':beat_stim, 'ref':6, 'intro':u'Binary (UP -> DOWN)'}
+    trial = {'prompt':(BinGestPrompt * 40), 'sound':beat_stim, 'ref':7, 'intro':u'Binary (UP -> DOWN)'}
     gest2Trials.extend([trial])
 
 gest3Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(TernGestPrompt * 30), 'sound':beat_stim, 'ref':7, 'intro':u'Ternary (UP -> UP -> DOWN)'}
+    trial = {'prompt':(TernGestPrompt * 30), 'sound':beat_stim, 'ref':8, 'intro':u'Ternary (UP -> UP -> DOWN)'}
     gest3Trials.extend([trial])
 
 allBlocks = []
@@ -221,7 +233,7 @@ elif expInfo['order'] == 12:
     allBlocks = [{'instructions':topGesture, 'trials':[gest3Trials] + [gest2Trials]}] + [{'instructions':topImagery, 'trials':[imagery3Trials] + [imagery2Trials]}] + [{'instructions':topWords, 'trials':[word3Trials] + [word2Trials]}] #CBA  
 
 
-
+"""
 # ====================== #
 # ===== START EXP ====== #
 # ====================== #
@@ -249,7 +261,7 @@ try:
     counter = 0
     while counter < len(topControl):
         if topControl[counter] == "sound":
-            sd.play(beat_stim)
+            sd.play(beat_inter)
             core.wait(5)
             sd.stop()
         else:
@@ -385,3 +397,4 @@ try:
 
 finally:
     win.close()
+"""

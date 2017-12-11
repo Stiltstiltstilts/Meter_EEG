@@ -29,6 +29,8 @@ ControlWords = [] #create empty list for processed words
 for n in range(0,len(d)):
     sen = d[n][0].split(' ') #going one line at a time spliting the sentence into seperate words
     ControlWords.append(sen)
+
+controlCatch = ['']
 ###===BINARY===###
 with open('WordList_Binary.txt', 'r') as f: #open stimuli file as object
     reader = csv.reader(f, delimiter='\t')
