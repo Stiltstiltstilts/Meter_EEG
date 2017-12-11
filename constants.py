@@ -50,6 +50,7 @@ for n in range(0,len(d)):
 
 BinaryPrompt = ['1', '2']
 TernaryPrompt = ['1', '2', '3']
-
+BinGestPrompt = ['DOWN', 'UP']
+TernGestPrompt = ['DOWN', 'UP', 'UP']
 
 

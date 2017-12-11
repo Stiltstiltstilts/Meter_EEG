@@ -156,7 +156,7 @@ for x in range(TRIALREPEATS):
     c = list(itertools.chain(*b))
     trial = {'prompt':c, 'sound':beat_stim, 'ref':1} # 'ref' is for the EEG triggers
     controlTrials.extend([trial])
-
+ # add catch trial
 word2Trials = []
 for x in range(TRIALREPEATS):
     b = BinaryWords[:]
@@ -185,12 +185,12 @@ for x in range(TRIALREPEATS):
 
 gest2Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(BinaryPrompt * 40), 'sound':beat_stim, 'ref':6, 'intro':u'Binary (UP -> DOWN)'}
+    trial = {'prompt':(BinGestPrompt * 40), 'sound':beat_stim, 'ref':6, 'intro':u'Binary (UP -> DOWN)'}
     gest2Trials.extend([trial])
 
 gest3Trials = []
 for x in range(TRIALREPEATS):
-    trial = {'prompt':(TernaryPrompt * 30), 'sound':beat_stim, 'ref':7, 'intro':u'Ternary (UP -> UP -> DOWN)'}
+    trial = {'prompt':(TernGestPrompt * 30), 'sound':beat_stim, 'ref':7, 'intro':u'Ternary (UP -> UP -> DOWN)'}
     gest3Trials.extend([trial])
 
 allBlocks = []
